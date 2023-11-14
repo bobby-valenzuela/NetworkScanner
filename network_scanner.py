@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import scapy.all as scapy
 
 print("Running...")
@@ -7,7 +8,7 @@ print("Running...")
 def scan(ip):
     scapy.arping(ip, iface="eth0")
 
-ip_range = '172.17.0.0/16' # default docker network
+ip_range = os.environ['IP_RANGE']
 scan(ip_range)
 
 
