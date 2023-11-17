@@ -44,11 +44,15 @@ def scan(ip):
     
     # SRP: SEND PACKET + RECEIVE RESPONSE 
     # scapy.srp() - is a send/request function that allows us to use our own cutom Ethernet frame unlike scapy.sr()
-    answered, unanswered = scapy.srp(arp_request_broadcast, timeout = 1)
-    print(answered.summary())
+    answered_list = scapy.srp(arp_request_broadcast, timeout = 1)[0]
+    print(answered_list.summary())
 
+    # FORMAT FINDINGS
+    print('\n------------ RESULTS ---------------\n')
+    for  element in answered_list:
+        print(f"{element[1].psrc}\t{element[1].hwsrc}")
 
-
+    print('\n------------------------------------\n')
 
     # ###[ Ethernet ]### 
     #   dst       = ff:ff:ff:ff:ff:ff           <- destination_mac: broadcast mac - forwarded to every device on network
