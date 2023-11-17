@@ -31,10 +31,11 @@ python3 -m venv env && . env/bin/activate && python3 -m pip3 install -r requirem
 
 <br />
 
-Running
+Running (against target ip)
 ```bash
-python3 network_scanner.py <ip_range:string>
+python3 network_scanner.py -t <ip_range:string>
 ```
+_Note: Accepts --target as well (instead of -t)_
 
 <br />
 

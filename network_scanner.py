@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 
 import os
-from sys import argv
 import scapy.all as scapy
+import argparse
+# Create the parser
+parser = argparse.ArgumentParser()
+# Add an argument
+parser.add_argument('-t', '--target', type=str, required=False)
+# Parse the argument
+args = parser.parse_args()
+# Print "Hello" + the user input argument
 
-print("Running...")
+debug = False
+
+if debug : print("Running...")
 
 def scan_w_scapy(ip):
     scapy.arping(ip)
@@ -19,10 +28,10 @@ def scan(ip):
     arp_request = scapy.ARP(pdst=ip)    # pdst - packet destination
 
     # Arp summary: "who has <ip> says <my ip/system sending arp>"
-    print(arp_request.summary())  
+    if debug : print(arp_request.summary())  
     
     # Deatils of arp request
-    arp_request.show()
+    if debug : arp_request.show()
 
 
 
@@ -31,28 +40,28 @@ def scan(ip):
     broadcast_frame = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
 
     # Print broadcast summary
-    print(broadcast_frame.summary())    
+    if debug : print(broadcast_frame.summary())    
 
     # Deatils of eth frame frame
-    broadcast_frame.show()
+    if debug : broadcast_frame.show()
     
 
     ### BUILD FINAL PAKCET: Arp packet + Ether frame
     arp_request_broadcast = broadcast_frame/arp_request # scapy syntax to combine
-    arp_request_broadcast.show()
+    if debug : arp_request_broadcast.show()
 
     
     # SRP: SEND PACKET + RECEIVE RESPONSE 
     # scapy.srp() - is a send/request function that allows us to use our own cutom Ethernet frame unlike scapy.sr()
-    answered_list = scapy.srp(arp_request_broadcast, timeout = 1)[0]
-    print(answered_list.summary())
+    answered_list = scapy.srp(arp_request_broadcast, timeout = 1, verbose = debug)[0]
+    if debug : print(answered_list.summary())
 
     # FORMAT FINDINGS
-    print('\n------------ RESULTS ---------------\n')
+    print('\nIP\t\t\tMAC Adddres\n----------------------------------------')
     for  element in answered_list:
-        print(f"{element[1].psrc}\t{element[1].hwsrc}")
+        print(f"{element[1].psrc}\t\t{element[1].hwsrc}")
 
-    print('\n------------------------------------\n')
+    print("")
 
     # ###[ Ethernet ]### 
     #   dst       = ff:ff:ff:ff:ff:ff           <- destination_mac: broadcast mac - forwarded to every device on network
@@ -82,14 +91,15 @@ if __name__ == '__main__':
 
 
     ip = ""
-    
+    print(f"ARGS: {args}\n")
     if 'IP_RANGE' in os.environ :
         ip = os.environ['IP_RANGE']
-    elif len(argv) > 1:
-        ip = argv[1]  
+    elif not args.target == "":
+        ip = args.target  
     else:
         ip = '172.17.0.1/24'
     
+    print(f"Using: {ip}")
     scan(ip)
 
 
