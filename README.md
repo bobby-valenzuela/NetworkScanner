@@ -20,10 +20,20 @@ Simple network scanner (arp-based)
 
 <br />
 
-### Using python-venv
-  
+### Using venv
+
+<br /> 
+
+Creating environment
 ```bash
 python3 -m venv env && . env/bin/activate && python3 -m pip3 install -r requirements.txt
+```
+
+<br />
+
+Running
+```bash
+python3 network_scanner.py <ip_range:string>
 ```
 
 <br />
@@ -36,21 +46,22 @@ python3 -m venv env && . env/bin/activate && python3 -m pip3 install -r requirem
 
 Build docker image
 ```bash
-docker build -t network_scanner:v1.0 .
+docker build -t network_scanner:v1 .
 ```
 
 <br />
 
 Running ephemeral container
 ```bash
-docker run --name network_scanner_container -it --rm -v ./:/usr/src/app network_scanner:v1.0
+docker run --name network_scanner_container -it --rm -v ./:/usr/src/app network_scanner:v1
 ``` 
+Optional: `-e IP_RANGE="<ip>"` (defaults to 172.17.0.1 - docker default subnet)
 
 <br />
 
 Running persistent container
 ```bash
-docker run --name network_scanner_container -d --rm -v ./:/usr/src/app network_scanner:v1.0 tail -f /dev/null
+docker run --name network_scanner_container -d --rm -v ./:/usr/src/app network_scanner:v1 tail -f /dev/null
 ```
 
 <br />
