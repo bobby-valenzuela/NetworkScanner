@@ -71,3 +71,8 @@ Entering into an interactive terminal session of your long-running container
 ```bash
 docker exec -it network_scanner_container /bin/bash
 ```
+
+<br />
+
+Check out the latest release for images and a demo:
+[Release V1](https://github.com/bobby-valenzuela/NetworkScanner/releases/tag/V1.0)
